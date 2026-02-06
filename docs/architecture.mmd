@@ -1,0 +1,74 @@
+flowchart TB
+    subgraph Input["Input"]
+        Q["User Question"]
+        A["AI Assistant Response"]
+        S["Retrieved Sources"]
+    end
+
+    subgraph GovBench["GovBench Evaluation Engine"]
+        direction TB
+
+        subgraph Judges["LLM-as-a-Judge Agents"]
+            direction LR
+            R["Relevance\nAgent"]
+            U["Usability\nAgent"]
+            N["Neutrality\nAgent"]
+            SE["Security\nAgent"]
+            V["Verification\nAgent"]
+        end
+
+        subgraph Scoring["Score Agents"]
+            direction LR
+            RS["Relevance\nScore"]
+            US["Usability\nScore"]
+            NS["Neutrality\nScore"]
+            SS["Security\nScore"]
+            VS["Verification\nScore"]
+        end
+
+        AGG["Score Aggregation\n(Average + Lowest)"]
+    end
+
+    subgraph Output["Output"]
+        direction LR
+        QUAL["Quality Explanation\n(per dimension)"]
+        SCORE["Scores 0-100\n(per dimension + total)"]
+        DASH["Dashboard-Ready\nJSON Response"]
+    end
+
+    Q --> Judges
+    A --> Judges
+    S --> V
+
+    R --> RS
+    U --> US
+    N --> NS
+    SE --> SS
+    V --> VS
+
+    RS --> AGG
+    US --> AGG
+    NS --> AGG
+    SS --> AGG
+    VS --> AGG
+
+    AGG --> QUAL
+    AGG --> SCORE
+    AGG --> DASH
+
+    subgraph Benchmark["Benchmark Pipeline"]
+        direction LR
+        GD["Golden Dataset\n(15 Q&A pairs)"]
+        EMB["GreenPT\nEmbeddings"]
+        COS["Cosine\nSimilarity"]
+        REP["Evaluation\nReport"]
+    end
+
+    GD --> EMB --> COS --> REP
+
+    style GovBench fill:#e8f4f8,stroke:#2196F3,stroke-width:2px
+    style Judges fill:#fff3e0,stroke:#FF9800,stroke-width:1px
+    style Scoring fill:#e8f5e9,stroke:#4CAF50,stroke-width:1px
+    style Benchmark fill:#f3e5f5,stroke:#9C27B0,stroke-width:1px
+    style Input fill:#fce4ec,stroke:#E91E63,stroke-width:1px
+    style Output fill:#e0f2f1,stroke:#009688,stroke-width:1px

@@ -1,0 +1,6 @@
+numpy
+requests
+trulens-eval
+ragas
+datasets
+langchain-openai
